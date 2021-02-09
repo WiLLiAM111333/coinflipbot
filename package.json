@@ -1,0 +1,34 @@
+{
+  "name": "coinflipbot",
+  "version": "1.0.0",
+  "description": "A bot to flip a coin and keep track of scores",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WiLLiAM111333/coinflipbot.git"
+  },
+  "keywords": [
+    "flip",
+    "coin",
+    "coinflip",
+    "bot",
+    "discord.js"
+  ],
+  "author": "WiLLiAM111333",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WiLLiAM111333/coinflipbot/issues"
+  },
+  "homepage": "https://github.com/WiLLiAM111333/coinflipbot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.11.15",
+    "strip-indent": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "startDev": "nodemon index.js",
+    "startProd": "pm2 start index.js"
+  }
+}
