@@ -1,12 +1,7 @@
-const { Client, Message, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { User } = require('../../db/models/User');
 const stripIndent = require('strip-indent');
 
-/**
- * @param {Client} client
- * @param {Message} message
- * @param {Array<string>} args
- */
 exports.run = async (client, message, args) => {
   const memberData = message.mentions.members.first() || message.member;
   const userData = memberData.user;
@@ -42,7 +37,7 @@ exports.run = async (client, message, args) => {
         **Wins**: \`${gameData.wins}\`
         **Losses**: \`${gameData.losses}\`
         **Winrate**: \`${gameData.winRate}\`
-      `))
+      `));
 
     message.channel.send(embed);
   }

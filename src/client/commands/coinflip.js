@@ -39,6 +39,8 @@ exports.run = async (client, message, args) => {
       });
 
       await newUser.save();
+
+      user = newUser;
     }
   } catch (err) {
     return console.error(err);
