@@ -65,7 +65,7 @@ exports.run = async (client, message, args) => {
         user.losses = user.losses + 1;
       }
 
-      user.winRate = `${((user.wins * 100) / (user.wins + user.losses)).toFixed(0)}%`;
+      user.winRate = `${((user.wins * 100) / (user.wins + user.losses)).toFixed(2)}%`;
 
       await user.save();
     } catch (err) {
