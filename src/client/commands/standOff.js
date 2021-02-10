@@ -61,14 +61,24 @@ exports.run = async (client, message, args) => {
       const collector = message.channel.createMessageCollector(filter, { time: 10000 });
 
       collector.on('collect', msg => {
-        const index = msg.author.id === userOne.id ? 0 : 1;
+        const guess = msg.content.toLowerCase();
+        if(guess !== 'heads' && guess !== 'tails') {
+          const embed = new MessageEmbed()
+            .setAuthor('ERROR')
+            .setColor('#ff0000')
+            .setDescription(`${guess} is not a valid side of the coin, accepted sides are: **heads** or **tails**`)
 
-        if(!guesses[index]) {
-          guesses[index] = msg.content.toLowerCase();
-        }
+          msg.channel.send(msg.author.toString(), { embed });
+        } else {
+          const index = msg.author.id === userOne.id ? 0 : 1;
 
-        if(guesses[0] && guesses[1]) {
-          collector.stop();
+          if(!guesses[index]) {
+            guesses[index] = guess;
+          }
+
+          if(guesses[0] && guesses[1]) {
+            collector.stop();
+          }
         }
       });
 
