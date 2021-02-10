@@ -1,9 +1,9 @@
-const { Client } = require('discord.js');
+const { Client, Collection } = require('discord.js');
 
 const client = new Client();
 
 client.prefix = '!';
-client.commands = new Map();
+client.commands = new Collection();
 
 require('../db/connect').connect();
 require('../structures/loadCommands').loadCommands(client);

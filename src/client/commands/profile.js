@@ -2,12 +2,6 @@ const { MessageEmbed } = require('discord.js');
 const { User } = require('../../db/models/User');
 const stripIndent = require('strip-indent');
 
-/**
- *
- * @param {*} client
- * @param {import('discord.js').Message} message
- * @param {*} args
- */
 exports.run = async (client, message, args) => {
   const memberData = message.mentions.members.first() || message.member;
   const userData = memberData.user;

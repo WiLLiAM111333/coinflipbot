@@ -15,7 +15,7 @@ module.exports = async (client, message) => {
     : message.content.split(/ +/);
 
   const command = args.shift().toLowerCase();
-  const cmd = client.commands.get(command);
+  const cmd = client.commands.get(command) || client.commands.find(c => (c.help.aliases.includes(command)));
 
   if(startsWithPrefix && cmd) {
     cmd.run(client, message, args)
