@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { User } = require('../../db/models/User');
-const { join } = require('path');
+const { flipCoin, createUser, handleStandOff } = require('../../structures/functions');
+const { COINFLIP_IMAGES } = require('../../structures/constants');
 const stripIndent = require('strip-indent');
 
 /**
@@ -11,7 +12,7 @@ const stripIndent = require('strip-indent');
 exports.run = async (client, message, args) => {
   const userOne = message.member;
   const mentionedUser = message.mentions.users.first();
-  const guessColor = '#1750fd';
+  const guessEmbedColor = '#1750fd';
 
   if(mentionedUser) {
     const userTwo = message.guild.member(mentionedUser);
@@ -21,47 +22,40 @@ exports.run = async (client, message, args) => {
       let userTwoGameData = await User.findOne({ id: userTwo.id });
 
       if(!userOneGameData) {
-        const newUser = new User({
+        userOneGameData = await createUser({
           tag: userOne.user.tag,
           id: userOne.user.id,
           wins: 0,
           losses: 0,
           winRate: '0%'
         });
-
-        userOneGameData = newUser;
-
-        await newUser.save();
       }
 
       if(!userTwoGameData) {
-        const newUser = new User({
+        userTwoGameData = await createUser({
           tag: userTwo.user.tag,
           id: userTwo.user.id,
           wins: 0,
           losses: 0,
           winRate: '0%'
         });
-
-        userTwoGameData = newUser;
-
-        await newUser.save();
       }
 
       const guesses = [];
 
       const guessEmbed = new MessageEmbed()
-        .setColor(guessColor)
+        .setColor(guessEmbedColor)
         .setAuthor('Both players, please guess! Heads or tails?', message.guild.iconURL({ dynamic: true }))
         .setFooter('You have 10 seconds to guess');
 
-      message.reply(guessEmbed);
+      message.channel.send(guessEmbed);
 
       const filter = msg => (msg.author.id === userOne.id || msg.author.id === userTwo.id);
       const collector = message.channel.createMessageCollector(filter, { time: 10000 });
 
       collector.on('collect', msg => {
         const guess = msg.content.toLowerCase();
+
         if(guess !== 'heads' && guess !== 'tails') {
           const embed = new MessageEmbed()
             .setAuthor('ERROR')
@@ -92,46 +86,17 @@ exports.run = async (client, message, args) => {
           return message.reply(notEnoughGuessesEmbed);
         }
 
-        const random = Math.floor(Math.random() * 2);
-        const winningSide = random ? 'heads' : 'tails';
+        const winningSide = flipCoin();
         const [userOneWin, userTwoWin] = guesses.map(guess => guess === winningSide);
-
-        const img = join(
-          __dirname,
-          '..',
-          '..',
-          '..',
-          'assets',
-          `${winningSide}.png`
-        );
+        const img = COINFLIP_IMAGES[winningSide]
 
         if(userOneWin) {
-          userOneGameData.wins = userOneGameData.wins + 1;
-          userTwoGameData.wins = (userTwoGameData.wins - 1) < 0
-            ? 0
-            : userTwoGameData.wins - 1;
+          await handleStandOff(userOneGameData, userTwoGameData);
         }
 
         if(userTwoWin) {
-          userTwoGameData.wins = userTwoGameData.wins + 1;
-          userOneGameData.wins = (userOneGameData.wins - 1) < 0
-            ? 0
-            : userOneGameData.wins - 1;
+          await handleStandOff(userTwoGameData, userOneGameData);
         }
-
-        const userOneWinrate = ((userOneGameData.wins * 100) / (userOneGameData.wins + userOneGameData.losses)).toFixed(2);
-        const userTwoWinrate = ((userTwoGameData.wins * 100) / (userTwoGameData.wins + userTwoGameData.losses)).toFixed(2)
-
-        userOneGameData.winRate = `${
-          isNaN(userOneWinrate) ? 0 : userOneWinrate
-        }%`;
-
-        userTwoGameData.winRate = `${
-          isNaN(userTwoWinrate) ? 0 : userTwoWinrate
-        }%`;
-
-        await userOneGameData.save();
-        await userTwoGameData.save();
 
         const winEmbed = new MessageEmbed()
           .setTitle(`${winningSide.replace(/\b./, char => char.toUpperCase())} won!`)

@@ -1,6 +1,12 @@
 const { MessageEmbed } = require('discord.js');
-const { join } = require('path');
 const { User } = require('../../db/models/User');
+const {
+  flipCoin,
+  createUser,
+  handleLoss,
+  handleWin
+} = require('../../structures/functions');
+const { COINFLIP_IMAGES } = require('../../structures/constants');
 const stripIndent = require('strip-indent');
 
 exports.run = async (client, message, args) => {
@@ -30,44 +36,19 @@ exports.run = async (client, message, args) => {
     user = await User.findOne({ id: message.author.id });
 
     if(!user) {
-      const newUser = new User({
-        tag: message.author.tag,
-        id: message.author.id,
-        wins: 0,
-        losses: 0,
-        winRate: '0%'
-      });
-
-      await newUser.save();
-
-      user = newUser;
+      user = await createUser(message.author);
     }
   } catch (err) {
     return console.error(err);
   } finally {
-    const random = Math.floor(Math.random() * 2);
-    const winningSide = random ? 'heads' : 'tails';
+    const winningSide = flipCoin();
     const didWin = guess === winningSide;
-
-    const img = join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'assets',
-      `${winningSide}.png`
-    );
+    const img = COINFLIP_IMAGES[winningSide];
 
     try {
-      if(didWin) {
-        user.wins = user.wins + 1;
-      } else {
-        user.losses = user.losses + 1;
-      }
-
-      user.winRate = `${((user.wins * 100) / (user.wins + user.losses)).toFixed(2)}%`;
-
-      await user.save();
+      didWin
+        ? await handleWin(user)
+        : await handleLoss(user);
     } catch (err) {
       console.error(err);
     } finally {
