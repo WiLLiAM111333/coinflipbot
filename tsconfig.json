@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ES2022",
+    "lib": [ "ESNext" ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
+  },
+  "include": [
+    "./src/**/*",
+    "./lib/**/*",
+    "./db/**/*",
+    "./util/**/*",
+    "./typings/**/*",
+    "./index.d.ts"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./package.json",
+    "./package-lock.json"
+  ]
+}
