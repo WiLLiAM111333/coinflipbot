@@ -10,20 +10,18 @@ export default class extends Event<'messageCreate'> {
   public callback(client: CoinflipClient, message: Message): Awaitable<void> {
     if(message.author.bot) return;
 
-    if(message.author.id === '107424723050180608') { // Temporary for development
-      const { prefix } = client.commandHandler;
+    const { prefix } = client.commandHandler;
 
-      const hasPrefix = message.content.startsWith(prefix);
+    const hasPrefix = message.content.startsWith(prefix);
 
-      const args = hasPrefix
-        ? message.content.slice(prefix.length).split(/ +/)
-        : message.content.split(/ +/);
+    const args = hasPrefix
+      ? message.content.slice(prefix.length).split(/ +/)
+      : message.content.split(/ +/);
 
-      const command = args.shift()?.toLowerCase();
+    const command = args.shift()?.toLowerCase();
 
-      if(hasPrefix && command && client.commandHandler.hasCommand(command)) {
-        client.commandHandler.execute(command, message, args);
-      }
+    if(hasPrefix && command && client.commandHandler.hasCommand(command)) {
+      client.commandHandler.execute(command, message, args);
     }
   }
 }

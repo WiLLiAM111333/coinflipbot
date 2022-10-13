@@ -96,15 +96,21 @@ export class CommandHandler {
           reason: 'Client missing permissions'
         });
       }
+
+      resolve({ success: true })
     });
   }
 
   public execute(command: string, message: Message, args: Array<string>): void {
     const cmd = this.commands.get(command);
 
-    if(this.validate(this.client, cmd, message)) {
-      cmd.run(this.client, message, args);
-    }
+    this.validate(this.client, cmd, message)
+      .then(({ success }) => {
+        if(success) {
+          cmd.run(this.client, message, args);
+        }
+      })
+      .catch(err => { throw err })
   }
 
   public help(command: string, message: Message, mention?: boolean): void {
