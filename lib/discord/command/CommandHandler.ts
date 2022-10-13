@@ -9,6 +9,7 @@ import {
   EmbedBuilder,
   GuildMember,
   PermissionResolvable,
+  Collection,
 } from "discord.js";
 
 const { EmbedColors } = Constants;
@@ -22,7 +23,7 @@ export class CommandHandler {
 
   public constructor(client: CoinflipClient) {
     this.client = client;
-    this.prefix = '.,.';
+    this.prefix = '!'
 
     this.commands = new Map();
 
@@ -55,7 +56,7 @@ export class CommandHandler {
   }
 
   public hasCommand(command: string): boolean {
-    return this.commands.has(command);
+    return this.commands.has(command)
   }
 
   public validate(client: CoinflipClient, command: Command, message: Message): Promise<{ success: boolean, reason?: string }> {
@@ -180,6 +181,12 @@ export class CommandHandler {
           const { default: Command } = await import(next);
           const command = new Command();
           const name: string = command.help.name;
+
+          if(command.help.aliases) {
+            for(const cmdAlias of command.help.aliases) {
+              this.commands.set(cmdAlias, command);
+            }
+          }
 
           this.commands.set(name, command);
         }
