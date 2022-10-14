@@ -271,7 +271,6 @@ export class ModerationLogger {
           if(oldPerms.allow.bitfield !== newPerms.allow.bitfield || oldPerms.deny.bitfield !== newPerms.deny.bitfield) {
             // I dont like it this time either 😢
             const permArr = [];
-            const logPermArr = [];
 
             const { type } = newPerms;
             const name = newPerms.type === OverwriteType.Member
@@ -372,7 +371,7 @@ export class ModerationLogger {
 
       const embed = new LogEmbed(ModerationLoggerLevel.MEDIUM)
         .setAuthor({ name: authorStr, iconURL: this._getAvatarFromAuditLog(auditLogEntry) })
-        .setDescription(diff.join(`\n`));
+        .setDescription(diff.join(`\n`) ?? 'Unsupported changes');
 
       this._log(guildId, embed);
       this._assignAuditLogEntry(guildId, auditLogEntry);
