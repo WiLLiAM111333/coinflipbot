@@ -687,7 +687,7 @@ export class ModerationLogger {
         .setAuthor({ name: `The sticker "${oldSticker.name}" was just edited by ${this._getTagFromAuditLog(auditLogEntry)}`, iconURL: this._getAvatarFromAuditLog(auditLogEntry) })
         .setDescription(diff
           .map(str => str.length >= 35 ? `${str}\n` : str)
-          .join('\n')
+          .join('\n') ?? 'Unsupported changes'
         );
 
       this._log(guildId, embed);
