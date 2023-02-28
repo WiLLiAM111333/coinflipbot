@@ -9,7 +9,7 @@ export class CommandErrorEmbed extends EmbedBuilder {
     super();
 
     this.setColor('#ff0000');
-    this.setDescription(`${error}\n\nUse the command "${bold(`${handler.prefix}help ${command}`)}" to get some help with using this command!`);
+    this.setDescription(`${error}\n\nUse the command "${bold(`${handler.prefix}help ${command}`)}" to get help with this command!`);
     this.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() });
   }
 }

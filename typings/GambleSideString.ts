@@ -1,0 +1,1 @@
+type GambleSideString = 'doubters' | 'believers';

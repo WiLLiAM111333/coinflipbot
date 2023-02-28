@@ -1,4 +1,5 @@
-import { Awaitable, Message } from "discord.js";
+import { Message } from "discord.js";
+import { User } from "../../db/models/User.model";
 import { CoinflipClient } from "../../lib/discord/client/CoinflipClient";
 import { Event } from "../../lib/discord/event/Event";
 
@@ -7,7 +8,7 @@ export default class extends Event<'messageCreate'> {
     super('messageCreate');
   }
 
-  public callback(client: CoinflipClient, message: Message): Awaitable<void> {
+  public async callback(client: CoinflipClient, message: Message): Promise<void> {
     if(message.author.bot) return;
 
     const { prefix } = client.commandHandler;
@@ -23,5 +24,10 @@ export default class extends Event<'messageCreate'> {
     if(hasPrefix && command && client.commandHandler.hasCommand(command)) {
       client.commandHandler.execute(command, message, args);
     }
+
+    const user = await User.findOne({ id: message.author.id });
+    user.currency += Math.floor(Math.random() * 12);
+
+    await user.save();
   }
 }

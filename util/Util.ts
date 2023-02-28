@@ -2,6 +2,7 @@ import { Document } from "mongoose";
 import { IUser } from "../lib/user/IUser";
 import { User } from "../db/models/User.model";
 import { FuckYou } from "../typings/FuckYou";
+import { Snowflake } from "discord.js";
 
 export class Util {
   private constructor() {
@@ -76,5 +77,15 @@ export class Util {
       totalLength += str.length
       return totalLength;
     }, 0);
+  }
+
+  public static multipleUserMention(...users: Array<Snowflake>): string {
+    let str = '';
+
+    for(let i = 0; i < users.length; i++) {
+      str += `<@${users[i]}>${i === users.length - 1 ? '' : ' '}`;
+    }
+
+    return str;
   }
 }

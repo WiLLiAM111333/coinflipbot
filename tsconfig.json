@@ -3,6 +3,8 @@
     "incremental": true,
     "target": "ES2022",
     "lib": [ "ESNext" ],
+    "allowJs": false,
+    "checkJs": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "CommonJS",

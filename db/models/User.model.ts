@@ -28,6 +28,11 @@ const UserSchema = new Schema<IUser>({
   personalRole: {
     type: String,
     required: false
+  },
+  currency: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 

@@ -1,4 +1,5 @@
-import { Message } from "discord.js";
+import { EmbedBuilder, Message } from "discord.js";
+import { join } from "path";
 import { CoinflipClient } from "../../lib/discord/client/CoinflipClient";
 import { Command } from "../../lib/discord/command/Command";
 
@@ -22,6 +23,6 @@ export default class extends Command {
   }
 
   public run(client: CoinflipClient, message: Message, args: Array<string>): void {
-    message.channel.send({ content: 'xd' })
+
   }
 }

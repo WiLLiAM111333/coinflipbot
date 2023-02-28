@@ -7,4 +7,5 @@ export interface IUser {
   losses: number;
   winRate: string;
   personalRole: string;
+  currency: number;
 }
